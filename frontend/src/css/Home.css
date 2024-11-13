@@ -125,6 +125,7 @@
             a{
                 font-size: 0.9vmax;
                 font-weight: 700;
+                text-decoration: none;
             }
             a:hover{
                 cursor: pointer;
@@ -137,6 +138,9 @@
         }
         .hm-xt-2-box-2{
             background-color: #f8aa21;
+            a{
+                color: black;
+            }
         }
         .hm-xt-2-box-3{
             background-color: #1ccdb0;

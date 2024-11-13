@@ -14,12 +14,15 @@ import UserDashboard from"./components/user/UserDashboard";
 import UserProfileInfo from"./components/user/UserProfileInfo";
 import Loader from './components/layouts/Loader';
 import UserPrivateroute from "./components/privateroutes/UserPrivateroute";
+import OrderLogin from './components/orders/OrderLogin.jsx';
+import OrderDetails from './components/orders/OrderDetails.jsx';
+import PaymentSucess from './components/orders/PymentSucess.jsx';
 
 const App = () => {
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <><Navbar /><Navbar2/><Path/><Home /></>,
+      element: <><Navbar /><Navbar2/><Path/><Home /><Footer/></>,
     },
     {
       path: "/bussiness/user/login",
@@ -30,8 +33,12 @@ const App = () => {
       element: <><Navbar /><Loader /></>,
     },
     {
+      path: "/payment_sucessfull",
+      element: <><Navbar /><PaymentSucess/><Footer/></>,
+    },
+    {
       path: "/bussiness/user/signup",
-      element: <><Navbar/><Login/></>,
+      element: <><Navbar/><Login/><Footer/></>,
     },
     {
       path: '/user',
@@ -50,7 +57,16 @@ const App = () => {
           element: <><AdminDashboard/></>,
         },
       ],
-    },]);
+    },
+    {
+      path: "/sim/order",
+      element: <><Navbar/><OrderLogin/><Footer/></>,
+    },
+    {
+      path: "/sim/order/details",
+      element: <><Navbar/><OrderDetails/><Footer/></>,
+    },
+  ]);
   return (
     <>
       <RouterProvider router={router} />

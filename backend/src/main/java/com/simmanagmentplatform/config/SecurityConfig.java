@@ -42,6 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/user/signup").permitAll()
                 .requestMatchers("/api/user/getallDetails").hasRole("ADMIN")
                 .requestMatchers("/api/sims/**").permitAll()
+                .requestMatchers("/api/order/**").permitAll()
                 .requestMatchers("/api/service/plan/**").permitAll()
                 .requestMatchers("/error").permitAll()
                 .anyRequest().authenticated())

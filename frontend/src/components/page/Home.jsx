@@ -8,6 +8,7 @@ import { BsPersonWorkspace, BsFileTextFill } from "react-icons/bs";
 import { AiOutlineGlobal } from "react-icons/ai";
 import Callback from './Callback';
 import StillHaveAnyQs from './StillHaveAnyQs';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   return (
@@ -43,7 +44,7 @@ const Home = () => {
           <Col className='hm-xt-2-box-2'>
             <button>PLANS</button>
             <h4>Enterprise Plans - PKI SIM</h4>
-            <a hrepf="">Order Now</a>
+            <Link to="/sim/order">Order Now</Link>
           </Col>
           <Col className='hm-xt-2-box-3'>
             <button>R&D</button>
@@ -109,7 +110,7 @@ const Home = () => {
         </div>
 
       </div>
-      <div className='home-last-border'></div>
+      {/* <div className='home-last-border'></div> */}
     </div>
   )
 }
