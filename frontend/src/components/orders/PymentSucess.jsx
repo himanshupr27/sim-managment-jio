@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import "../../css/PaymentSucess.css";
 
 const PymentSucess = () => {
+    const navigate = useNavigate();
     const [paymentData,setPaymentData]=useState({});
     const [user, setUser] = useState({
       usersname: '',
@@ -31,7 +33,7 @@ const PymentSucess = () => {
         </tr>
       </table>
       <p className='proceed-para'>Please click on Proceed to continue the verification process of PKI-SIM.</p>
-      <button className='btn-proceed'>Proceed</button>
+      <button className='btn-proceed' onClick={()=>{navigate('/e-kyc')}}>Proceed</button>
     </div>
   )
 }

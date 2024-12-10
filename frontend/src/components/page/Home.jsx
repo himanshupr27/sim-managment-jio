@@ -8,9 +8,10 @@ import { BsPersonWorkspace, BsFileTextFill } from "react-icons/bs";
 import { AiOutlineGlobal } from "react-icons/ai";
 import Callback from './Callback';
 import StillHaveAnyQs from './StillHaveAnyQs';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div>
       <img src='/Images/Home/image-1.jpeg' id='home-ing-1' />
@@ -18,7 +19,7 @@ const Home = () => {
         <h1>Transform business processes with enhanced security - PKI SIM</h1>
         <p>The PKI SIM (Public Key Infrastructure SIM) project aims to revolutionize mobile security by integrating robust crypto- graphic protocols directly into SIM cards. Leveraging PKI technology, this STM Solution provides an advanced, secure and scalable method for authentications, encryption, and digital signaSure services, ensuring safe data transmission across business use cases.</p>
         <div>
-          <button type='button' className='video-btn'>Video</button>
+          <button type='button' className='video-btn' onClick={()=>{navigate('/video-recording-kyc')}}>Video</button>
           <button type='button' className='how-to-order-btn'>How to order</button>
         </div>
       </div>
@@ -96,6 +97,7 @@ const Home = () => {
 
       <Callback />
       <StillHaveAnyQs />
+
       <div className="tell-us-about-your-visit">
         <div className="tell-us-about-your-visit-box">
           <h1>Tell us about your visit</h1>

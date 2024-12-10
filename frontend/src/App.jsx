@@ -17,6 +17,8 @@ import UserPrivateroute from "./components/privateroutes/UserPrivateroute";
 import OrderLogin from './components/orders/OrderLogin.jsx';
 import OrderDetails from './components/orders/OrderDetails.jsx';
 import PaymentSucess from './components/orders/PymentSucess.jsx';
+import Recording from './components/e-KYC/Recording.jsx';
+import PersonalDetails from './components/e-KYC/PersonalDetails.jsx';
 
 const App = () => {
   const router = createBrowserRouter([
@@ -57,6 +59,14 @@ const App = () => {
           element: <><AdminDashboard/></>,
         },
       ],
+    },
+    {
+      path: "/video-recording-kyc",
+      element: <><Navbar/><Recording/><Footer/></>,
+    },
+    {
+      path: "/e-kyc",
+      element: <><Navbar/><PersonalDetails/><Footer/></>,
     },
     {
       path: "/sim/order",

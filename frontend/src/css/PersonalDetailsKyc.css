@@ -1,0 +1,86 @@
+.personal-dt-box{
+    display: flex;
+}
+.left-part{
+ width: 60%;
+ padding: 1vmax 3vmax;
+ .display-hidden{
+    display: none;
+ }
+    .personal-details{
+        margin-top: 0.5vmax;
+        .personal-dt-heading{
+            background-color: var(--dark-blue);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1vmax;
+            h4{
+                color: #ffff;
+            }
+            .heading{
+                display: flex;
+                align-items: center;
+                h5{
+                    color: #ffff;
+                    /* padding: 0.5vmax 1vmax;
+                    margin: 0;
+                    margin-right: 0.5vmax;
+                    border: 1px solid blue;
+                    box-shadow: inset 0px 0px 5px 0px blue; */
+                }
+            }
+            .change-btn{
+                border: none;
+                background-color: #e4e4e4e3;
+                padding: 0.3vmax 1vmax;
+                font-size: 1vmax;
+                font-weight: 500;
+                border-radius: 5px;
+            }
+            .change-btn:hover{
+                background-color: var(--blue);
+                color: #ffff;
+            }
+        }
+        .personal-dt-heading-completed{
+            border-top: 2px solid #808080a0;
+            border-bottom: 2px solid #808080ab;
+            background-color: white;
+            border: none;
+            box-shadow: 0px 0px 5px 0px #808080a8;
+            h4{
+                color: var(--dark-blue);
+            }
+        }
+        .personal-content{
+            padding: 1vmax;
+        }
+        .btn-box{
+            display: flex;
+            justify-content: flex-end;
+        }
+        .next-btn{
+            border: none;
+            padding: 0.5vmax 2vmax;
+            border-radius: 20px;
+            background-color: var(--light-blue);
+            color: #ffff;
+        }
+        .next-btn:hover{
+            background-color: var(--blue);
+        }
+    }
+    .list-flex{
+        display: flex;
+        width: 80%;
+        justify-content: space-between;
+        .text-bold{
+            font-weight: 500;
+        }
+    }
+}
+.right-part{
+    background-color: rgb(254, 140, 140);
+    width: 40%;
+}
