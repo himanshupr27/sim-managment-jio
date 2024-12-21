@@ -16,12 +16,21 @@ const Recording = () => {
       </div>
       <div className='vk-right-part'>
         <h6>Follow the steps below to record the video</h6>
-        <ul>
-          <li><span>Read</span>I am Iris, and my code for this video kyc is 1001</li>
-          <li><span>Show</span> Aadhar</li>
-          <li><span>Show</span> Pan</li>
-        </ul>
-        <button onClick={()=>{setActiveVideoRecording(true)}}>Proceed to video recording</button>
+
+        <div className="steps">
+          <span>Read</span>
+          <p>I am Iris, and my code for this video kyc is 1001</p>
+        </div>
+        <div className="steps">
+          <span>Show</span>
+          <p>Aadhar</p>
+        </div>
+        <div className="steps">
+        <span>Show</span>
+        <p>Pan</p>
+        </div>
+        
+        <button className='btn' onClick={()=>{setActiveVideoRecording(true)}}>Proceed to video recording</button>
       </div>
     </div>
     <div className={`video-kyc-box ${activeVideoRecording ? "" : "display-hidden"}`}>
