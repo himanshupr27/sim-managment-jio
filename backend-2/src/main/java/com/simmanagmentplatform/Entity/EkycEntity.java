@@ -1,5 +1,6 @@
 package com.simmanagmentplatform.Entity;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -34,5 +35,8 @@ public class EkycEntity {
     @Lob
     private byte[] video;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "profile_id")
+    private ProfileEntity profileEntity;
     
 }

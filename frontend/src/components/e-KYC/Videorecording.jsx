@@ -73,6 +73,7 @@ const Videorecording = () => {
     formData.append("video", new File([videoBlob], `${userData.usersname}-video-ekyc-${code}.webm`, { type: "video/webm" }));
     formData.append("username", userData.usersname);
     formData.append("code", code);
+    console.log(formData);
     navigate('/track-order');
 
   }, [videoBlob, userData, code]);

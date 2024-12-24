@@ -152,7 +152,7 @@ const OrderDetails = () => {
             {
                 console.log("next");
                 let options = {
-                    "key": "rzp_test_VtabkGRGa9SEhd", // Enter the Key ID generated from the Dashboard
+                    "key": "rzp_test_VtabkGRGa9SEhd",
                     "amount": "2775",
                     "currency": "INR",
                     "name": "JIO PKI SIM",

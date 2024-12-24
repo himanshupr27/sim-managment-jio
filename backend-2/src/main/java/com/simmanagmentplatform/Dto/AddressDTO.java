@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+
 public class AddressDTO {
     @NotEmpty(message = "Street cannot be empty")
     private String street;

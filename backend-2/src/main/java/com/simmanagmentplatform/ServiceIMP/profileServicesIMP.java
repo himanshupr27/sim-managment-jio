@@ -11,9 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.simmanagmentplatform.Dto.ProfileDTO;
+import com.simmanagmentplatform.Entity.EkycEntity;
+import com.simmanagmentplatform.Entity.OrdersEntity;
 import com.simmanagmentplatform.Entity.ProfileEntity;
+import com.simmanagmentplatform.Entity.SimDetailsEntity;
+import com.simmanagmentplatform.Entity.UsersEntity;
 import com.simmanagmentplatform.Exceptions.ResourseNotFoundException;
+import com.simmanagmentplatform.Reposiotry.eKycRepo;
+import com.simmanagmentplatform.Reposiotry.orderRepo;
 import com.simmanagmentplatform.Reposiotry.profileRepo;
+import com.simmanagmentplatform.Reposiotry.simRepo;
+import com.simmanagmentplatform.Reposiotry.userRepo;
 import com.simmanagmentplatform.Response.ApiResponse;
 import com.simmanagmentplatform.Services.profileServices;
 
@@ -24,12 +32,25 @@ public class profileServicesIMP implements profileServices {
     profileRepo profileRepo;
 
     @Autowired
+    eKycRepo eKycRepo;
+
+    @Autowired
+    userRepo userRepo;
+
+    @Autowired
+    orderRepo orderRepo;
+
+    @Autowired
+    simRepo simRepo;
+
+    @Autowired
     ModelMapper modelMapper;
 
     @Override
-    public ResponseEntity<ApiResponse> createProfile(ProfileDTO profileDTO) {
+    public ResponseEntity<ApiResponse> createProfile(ProfileDTO profileDTO,Long id) {
 
-        ProfileEntity profileEntity = this.modelMapper.map(profileDTO, ProfileEntity .class);
+        profileDTO.setUser_id(id);
+        ProfileEntity profileEntity = this.dtoToEntity(profileDTO);
         this.profileRepo.save(profileEntity);
 
         ApiResponse apiResponse =new ApiResponse("Profile CREATED", true);
@@ -41,7 +62,7 @@ public class profileServicesIMP implements profileServices {
 
         List<ProfileEntity> profileEntits = this.profileRepo.findAll();
 
-        List<ProfileDTO> profileDTOs=profileEntits.stream().map((plan)->this.modelMapper.map(plan, ProfileDTO.class)).collect(Collectors.toList());
+        List<ProfileDTO> profileDTOs = profileEntits.stream().map(this::entityToDto).collect(Collectors.toList());
 
         return profileDTOs;
         
@@ -52,7 +73,7 @@ public class profileServicesIMP implements profileServices {
 
         ProfileEntity profileEntity = this.profileRepo.findById(id).orElseThrow(()-> new ResourseNotFoundException("Profile", "id", Long.toString(id)));
 
-        return this.modelMapper.map(profileEntity, ProfileDTO.class);
+        return entityToDto(profileEntity);
     }
 
     @Override
@@ -76,6 +97,23 @@ public class profileServicesIMP implements profileServices {
         Optional.ofNullable(profileDTO.getGender()).ifPresent(profileEntity::setGender);
         Optional.ofNullable(profileDTO.getPhoneNumber()).ifPresent(profileEntity::setPhoneNumber);
         Optional.ofNullable(profileDTO.getAddress()).ifPresent(profileEntity::setAddress);
+        Optional.ofNullable(profileDTO.getEkyc_id()).ifPresent(ekyc_id->{
+            EkycEntity ekycEntity=this.eKycRepo.findById(ekyc_id).orElseThrow(()-> new ResourseNotFoundException("eKYC RECORD", "id", Long.toString(ekyc_id)));;
+            profileEntity.setEkycEntity(ekycEntity);
+        });
+        Optional.ofNullable(profileDTO.getSim_id()).ifPresent(sim_id->{
+            SimDetailsEntity simDetailsEntity=this.simRepo.findById(sim_id).orElseThrow(()-> new ResourseNotFoundException("SIM", "id", Long.toString(sim_id)));;
+             profileEntity.setSimDetailsEntity(simDetailsEntity);;
+             
+         });
+        Optional.ofNullable(profileDTO.getUser_id()).ifPresent(user_id->{
+            UsersEntity usersEntity = this.userRepo.getReferenceById(user_id);
+            profileEntity.setUsersEntity(usersEntity);
+        });
+        Optional.ofNullable(profileDTO.getOreder_id()).ifPresent(order_id->{
+            OrdersEntity ordersEntity = this.orderRepo.findById(order_id).orElseThrow(()-> new ResourseNotFoundException("Order", "id", Long.toString(order_id)));;
+            profileEntity.setOrdersEntity(ordersEntity);
+        });
 
         profileRepo.save(profileEntity);
 
@@ -83,10 +121,51 @@ public class profileServicesIMP implements profileServices {
         return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
     }
 
-    @Override
-    public List<ProfileDTO> getPrfileByUserId(Long id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPrfileByUserId'");
+
+
+    //..............................................................................................
+    
+    private ProfileEntity dtoToEntity(ProfileDTO profileDTO){
+
+        ProfileEntity profileEntity =this.modelMapper.map(profileDTO, ProfileEntity .class);
+       
+        Optional.ofNullable(profileDTO.getEkyc_id()).ifPresent(ekyc_id->{
+            EkycEntity ekycEntity=this.eKycRepo.findById(ekyc_id).orElseThrow(()-> new ResourseNotFoundException("eKYC RECORD", "id", Long.toString(ekyc_id)));;
+            profileEntity.setEkycEntity(ekycEntity);
+            
+        });
+       
+        Optional.ofNullable(profileDTO.getSim_id()).ifPresent(sim_id->{
+           SimDetailsEntity simDetailsEntity=this.simRepo.findById(sim_id).orElseThrow(()-> new ResourseNotFoundException("SIM", "id", Long.toString(sim_id)));
+            profileEntity.setSimDetailsEntity(simDetailsEntity);
+            
+        });
+        
+        Optional.ofNullable(profileDTO.getUser_id()).ifPresent(user_id->{
+            UsersEntity usersEntity = this.userRepo.findById(user_id).orElseThrow(()-> new ResourseNotFoundException("User", "id", Long.toString(user_id)));;;
+            profileEntity.setUsersEntity(usersEntity);
+        });
+
+        Optional.ofNullable(profileDTO.getOreder_id()).ifPresent(order_id->{
+            OrdersEntity ordersEntity = this.orderRepo.findById(order_id).orElseThrow(()-> new ResourseNotFoundException("Order", "id", Long.toString(order_id)));;
+            profileEntity.setOrdersEntity(ordersEntity);
+        });
+
+        return profileEntity;
     }
     
+    private ProfileDTO entityToDto(ProfileEntity profileEntity){
+
+        ProfileDTO profileDTO = this.modelMapper.map(profileEntity, ProfileDTO.class);
+
+        Optional.ofNullable(profileEntity.getEkycEntity()).ifPresent(ekycEntity->profileDTO.setEkyc_id(ekycEntity.getId()));
+
+        Optional.ofNullable(profileEntity.getSimDetailsEntity()).ifPresent(simEntity->profileDTO.setSim_id(simEntity.getSim_id()));
+
+        Optional.ofNullable(profileEntity.getUsersEntity()).ifPresent(userEntity -> profileDTO.setUser_id(userEntity.getId()));
+
+        Optional.ofNullable(profileEntity.getOrdersEntity()).ifPresent(orderEntity-> profileDTO.setOreder_id(orderEntity.getId()));
+        
+        return profileDTO;
+    }
 }

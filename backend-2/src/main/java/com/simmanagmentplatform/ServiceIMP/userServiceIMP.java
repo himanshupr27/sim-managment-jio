@@ -3,6 +3,7 @@ package com.simmanagmentplatform.ServiceIMP;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,16 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.simmanagmentplatform.Dto.GetAllResponse;
-import com.simmanagmentplatform.Dto.OrdersDTO;
-import com.simmanagmentplatform.Dto.SimDetailsDTO;
+import com.simmanagmentplatform.Dto.ProfileDTO;
 import com.simmanagmentplatform.Dto.UsersDTO;
-
-import com.simmanagmentplatform.Entity.OrdersEntity;
-import com.simmanagmentplatform.Entity.SimDetailsEntity;
+import com.simmanagmentplatform.Entity.Roles;
 import com.simmanagmentplatform.Entity.UsersEntity;
 import com.simmanagmentplatform.Exceptions.ResourseNotFoundException;
-import com.simmanagmentplatform.Reposiotry.orderRepo;
-import com.simmanagmentplatform.Reposiotry.simRepo;
+import com.simmanagmentplatform.Reposiotry.roleRepo;
 import com.simmanagmentplatform.Reposiotry.userRepo;
 import com.simmanagmentplatform.Response.ApiResponse;
 import com.simmanagmentplatform.Services.userServices;
@@ -34,17 +31,17 @@ public class userServiceIMP implements userServices {
     @Autowired
     private userRepo userRepo;
 
+    @Autowired
+    private roleRepo roleRepo;
+
     // @Autowired
     // private PasswordEncoder passwordEncoder;
 
     @Autowired
     private ModelMapper modelMapper;
 
-    @Autowired
-    private simRepo simRepo;
 
-    @Autowired
-    private orderRepo orderRepo;
+
 
     // Create a new User 
     @Override
@@ -93,12 +90,6 @@ public class userServiceIMP implements userServices {
         UsersEntity userEntity = this.userRepo.findById(id)
             .orElseThrow(() -> new ResourseNotFoundException("User ", "ID", Long.toString(id)));
 
-            Set<SimDetailsEntity> simSet = new HashSet<>(this.simRepo.findByUsersEntity(userEntity));
-
-            Set<OrdersEntity> ordersSet= new HashSet<>(this.orderRepo.findByUsersEntity(userEntity));
-
-            userEntity.setSims(simSet);
-            userEntity.setOrders(ordersSet);
         
         return entityToDto(userEntity);
     }
@@ -134,56 +125,23 @@ public class userServiceIMP implements userServices {
     // --------------------------------------------------------------------------------------------------
     // Helper Methods
 
-    // Convert from Entity to DTO, including byte[] to Base64 string
+    // Convert from Entity to DTO
     private UsersDTO entityToDto(UsersEntity userEntity) {
         UsersDTO usersDTO = modelMapper.map(userEntity, UsersDTO.class);
 
-        // Map binary data to Base64 strings
-        // usersDTO.setProfilePicture(byteArrayToBase64(userEntity.getProfilePicture()));
-        // usersDTO.setPanCardPicture(byteArrayToBase64(userEntity.getPanCardPicture()));
-        // usersDTO.setAddressProofPicture(byteArrayToBase64(userEntity.getAddressProofPicture()));
-        // usersDTO.setVideo(byteArrayToBase64(userEntity.getVideo()));
-        // usersDTO.setOrders(
-        //     userEntity.getOrders()
-        //         .stream()
-        //         .map(OrdersEntity::getId) // Return IDs as Long
-        //         .collect(Collectors.toSet())
-        // );
-    
-        usersDTO.setSims(userEntity.getSims()
-        .stream()
-        .map(sim -> modelMapper.map(sim, SimDetailsDTO.class))
-        .collect(Collectors.toSet()));
-        
-        usersDTO.setOrders(userEntity.getOrders()
-        .stream()
-        .map(orders -> modelMapper.map(orders, OrdersDTO.class))
-        .collect(Collectors.toSet()));
+        usersDTO.setProfiles(userEntity.getProfiles().stream().map(profile -> modelMapper.map(profile, ProfileDTO.class)).collect(Collectors.toList()));
+        usersDTO.setRole_id(userEntity.getRole().getId());
 
         return usersDTO;
     }
 
-    // Convert from DTO to Entity, including Base64 string to byte[]
+    // Convert from DTO to Entity
     private UsersEntity dtoToEntity(UsersDTO usersDTO) {
         UsersEntity usersEntity = modelMapper.map(usersDTO, UsersEntity.class);
-
-        // Map Base64 strings to binary data
-        // usersEntity.setProfilePicture(base64ToByteArray(usersDTO.getProfilePicture()));
-        // usersEntity.setPanCardPicture(base64ToByteArray(usersDTO.getPanCardPicture()));
-        // usersEntity.setAddressProofPicture(base64ToByteArray(usersDTO.getAddressProofPicture()));
-        // usersEntity.setVideo(base64ToByteArray(usersDTO.getVideo()));
-     
+      
+        Roles role = this.roleRepo.findById(usersDTO.getRole_id()) .orElseThrow(() -> new ResourseNotFoundException("User ", "ID", Long.toString(usersDTO.getRole_id())));
+        usersEntity.setRole(role);
 
         return usersEntity;
     }
-
-    // Convert byte[] to Base64 String
-    // private String byteArrayToBase64(byte[] byteArray) {
-    //     return byteArray != null ? Base64.getEncoder().encodeToString(byteArray) : null;
-    // }
-
-    // // Convert Base64 String to byte[]
-    // private byte[] base64ToByteArray(String base64String) {
-    //     return base64String != null ? Base64.getDecoder().decode(base64String) : null;
-    // }
 }

@@ -1,7 +1,10 @@
 package com.simmanagmentplatform.Dto;
 
 
-import java.util.Set;
+import java.util.List;
+// import java.util.Set;
+
+// import javax.management.relation.Role;
 
 // import com.fasterxml.jackson.annotation.JsonIgnore;
 // import com.fasterxml.jackson.annotation.JsonProperty;
@@ -29,11 +32,9 @@ public class UsersDTO {
     @Email(message = "Email must be valid")
     private String emailId;
 
-    private Set<String> roles;
+    private Long role_id;
 
-    private Set<OrdersDTO> orders;
-
-    private Set<SimDetailsDTO> sims;
+    private List<ProfileDTO> profiles;
 
     // @JsonIgnore
     // public String getEncryptedPin() {

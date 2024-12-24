@@ -29,4 +29,12 @@ public class ProfileDTO {
     private String fullName;
 
     private Address address;
+
+    private Long ekyc_id;
+
+    private Long sim_id;
+    
+    private Long oreder_id;
+
+    private Long user_id;
 }

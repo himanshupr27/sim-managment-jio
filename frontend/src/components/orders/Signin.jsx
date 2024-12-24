@@ -89,6 +89,21 @@ const Signin = () => {
             setOtpbox(true);
         }
     };
+
+    const handleSubmit2 = (e) => {
+        e.preventDefault();
+
+    const jioEmailRegex = /^[a-zA-Z0-9._%+-]+@ril\.com$/;
+    const isEmailValid = employee.jioemail.trim() !== '' && jioEmailRegex.test(employee.jioemail);
+        setErrors({
+            jioemail: isEmailValid ? "" : "true"
+        });
+    
+        if (isEmailValid) {
+            generateOtpCode();
+            setOtpbox(true);
+        }
+    };
     
     const handelVerifOtp = () => {
         if (Number(OTP) === generateOtp) {
@@ -148,12 +163,12 @@ const Signin = () => {
                 </div>
                 <div className={`left-box employee-user ${typeOfUser === 3?'':'hide'}`}>
                     <h1>3Join over million of users who digitally sign documents</h1>
-                    <form onSubmit={handleSubmit}>
+                    <form onSubmit={handleSubmit2}>
                         <div className={`input-box ${errors.usersname ? 'errors-bar' : ''}`}>
                             <input id="jioemail" type="text" name="jioemail" required="required" value={employee.jioemail} onChange={handleInput} />
                             <label htmlFor="jioemail">Your Relaince Email Id</label>
                         </div>
-                        {errors.jioemail && <span className="error-message"><RxCrossCircled />Enter Your Name</span>}                        
+                        {errors.jioemail && <span className="error-message"><RxCrossCircled />Enter Your Jio Mail Id</span>}                        
                         <p className='otp-para'>You will recieve an OTP on your email to verify your identity as per CCA guidelibnes</p>
                         <div className="buy-button-box">
                             <button className='buy-button' type='submit'>Proceed</button>

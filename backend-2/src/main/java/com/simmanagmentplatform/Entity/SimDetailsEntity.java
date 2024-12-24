@@ -1,6 +1,9 @@
 package com.simmanagmentplatform.Entity;
 
 import java.util.Date;
+
+// import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -39,8 +42,9 @@ public class SimDetailsEntity {
     @JoinColumn(name = "service_id", referencedColumnName = "service_id")
     private ServicePlanEntity servicePlanEntity;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private UsersEntity usersEntity;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="profile_id")
+    private ProfileEntity profileEntity;
 
 }

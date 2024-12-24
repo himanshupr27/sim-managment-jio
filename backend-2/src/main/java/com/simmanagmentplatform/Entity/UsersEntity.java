@@ -1,10 +1,12 @@
 package com.simmanagmentplatform.Entity;
 
+import java.util.List;
+
 // import jakarta.persistence.Column;
 
 // import java.util.Collection;
 // import java.util.HashSet;
-import java.util.Set;
+// import java.util.Set;
 // import java.util.stream.Collectors;
 
 // import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -34,23 +36,19 @@ public class UsersEntity  {
 
     private String emailId;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-        name = "user_roles",
-        joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-        inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
-    )
-    private Set<Roles> roles;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
+    private Roles role;
+
+    @OneToMany(mappedBy = "usersEntity",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<ProfileEntity> profiles;
 
 
-    @OneToMany(mappedBy = "usersEntity", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @ToString.Exclude
-    private Set<OrdersEntity> orders;
 
 
-    @OneToMany(mappedBy = "usersEntity", cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-    @ToString.Exclude
-    private Set<SimDetailsEntity> sims;
+
+
+
 
     // @Override
     // public Collection<? extends GrantedAuthority> getAuthorities() {

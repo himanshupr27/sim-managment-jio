@@ -459,7 +459,9 @@ const PersonalDetails = () => {
           </div>
           <div className="btn-box">
             <button className='back-btn' onClick={() => { setPersonalDetailsBlock(3) }}>Back</button>
-            <button className='next-btn' disabled={!otpverified} onClick={() => { navigate('/video-recording-kyc') }}>Submit</button>
+            <button className='next-btn' disabled={!otpverified} onClick={() => { navigate('/video-recording-kyc');
+              console.log(userKycDetails);
+             }}>Submit</button>
           </div>
         </div>
       </div>

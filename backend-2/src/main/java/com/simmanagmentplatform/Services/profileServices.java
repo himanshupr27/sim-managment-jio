@@ -8,7 +8,7 @@ import com.simmanagmentplatform.Response.ApiResponse;
 
 public interface profileServices {
 
-    public ResponseEntity<ApiResponse> createProfile(ProfileDTO profileDTO);
+    public ResponseEntity<ApiResponse> createProfile(ProfileDTO profileDTO,Long id);
    
     public List<ProfileDTO> getAllProfile();
 
@@ -18,6 +18,5 @@ public interface profileServices {
     
     public ResponseEntity<ApiResponse> updateProfile(ProfileDTO profileDTO, Long id);
 
-    public List<ProfileDTO> getPrfileByUserId(Long id);
     
 }

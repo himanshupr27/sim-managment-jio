@@ -1,7 +1,6 @@
 package com.simmanagmentplatform.Dto;
 
 import java.util.Date;
-
 import com.simmanagmentplatform.Entity.ServicePlanEntity;
 
 import lombok.AllArgsConstructor;
@@ -32,8 +31,8 @@ public class SimDetailsDTO {
     private Date issueDate;
 
     private ServicePlanEntity servicePlanEntity;
-    
-    private Long user_id;
+
+    private Long profile_id;
 
 
 }

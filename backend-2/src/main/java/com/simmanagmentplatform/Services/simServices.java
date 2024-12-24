@@ -10,11 +10,13 @@ public interface simServices {
     
     ResponseEntity<?> createSimData(SimDetailsDTO simDetailsDTO);
 
-    SimDetailsDTO updateSimData(SimDetailsDTO simDetailsDTO, Long id);
-
-    SimDetailsDTO assigningSimToUser(Long sim_id, Long user_id);
-    
     ResponseEntity<?> deleteSimData(Long id);
+
+    ResponseEntity<?> allocateSimToProfile(Long sim_id,Long profile_id);
+    
+    SimDetailsDTO updateSimData(SimDetailsDTO simDetailsDTO, Long id);
+    
+    SimDetailsDTO getSimsDataById(Long id);
 
     List<SimDetailsDTO> getAllSimsData();
 
@@ -22,7 +24,5 @@ public interface simServices {
     
     List<SimDetailsDTO> getAllSimsDataByAvailablity(Boolean available);
 
-    SimDetailsDTO getSimsDataById(Long id);
 
-    List<SimDetailsDTO> getSimsDataByUserId(Long id);
 }

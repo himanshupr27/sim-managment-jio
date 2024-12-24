@@ -2,6 +2,7 @@ package com.simmanagmentplatform.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+// import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.simmanagmentplatform.Dto.SimDetailsDTO;
@@ -53,15 +54,12 @@ public class simController {
 
     }
 
+    @PostMapping("/allote/sim")
+    public ResponseEntity<?> alloteSimToProfile(@RequestParam Long sim_id,@RequestParam Long profile_id) {
 
-
-    @PostMapping("/allocate")
-    public SimDetailsDTO assignSimToUser(@RequestParam Long sim_id, @RequestParam Long user_id) {
-
-        return this.simServices.assigningSimToUser(sim_id, user_id);
-
+        return this.simServices.allocateSimToProfile(sim_id, profile_id);
     }
-
+    
 
 
     @GetMapping("/get/all")
@@ -96,11 +94,4 @@ public class simController {
     }
 
 
-//    ....................user..................
-   @GetMapping("/get/sims/user/{id}")
-   public List<SimDetailsDTO> getSimsByUserId(@PathVariable Long id) {
-
-       return this.simServices.getSimsDataByUserId(id);
-
-   }
 }

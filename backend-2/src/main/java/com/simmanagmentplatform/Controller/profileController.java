@@ -27,10 +27,10 @@ public class profileController {
         return this.profileServices.getAllProfile();
     }
     
-    @PostMapping("/create")
-    public ResponseEntity<?> postMethodName(@RequestBody ProfileDTO profileDTO) {
+    @PostMapping("/user/{id}/create")
+    public ResponseEntity<?> postMethodName(@RequestBody ProfileDTO profileDTO,@PathVariable Long id) {
         
-        return this.profileServices.createProfile(profileDTO);
+        return this.profileServices.createProfile(profileDTO,id);
     }
 
     @PutMapping("update/{id}")

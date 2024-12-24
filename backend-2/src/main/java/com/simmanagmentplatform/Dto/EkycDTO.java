@@ -26,5 +26,7 @@ public class EkycDTO {
     private String video;
 
     private String kycstatus;
+
+    private Long profile_id;
     
 }
