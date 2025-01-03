@@ -104,16 +104,16 @@ const UserList = () => {
           <th>Id</th>
           <th>Authority Name</th>
           <th>Email Address</th>
-          <th>Contact Number</th>
+          <th>Role</th>
           <th>Edit</th>
           <th>Delete</th>
         </tr>
         {userdata && userdata.content.map((data)=>(
           <tr key={data.id}>
           <td>{data.id}</td>
-          <td>{data.usersName}</td>
+          <td>{data.fullName}</td>
           <td>{data.emailId}</td>
-          <td>{data.phoneNumber}</td>
+          <td>{data.role_id}</td>
           <td><button type='button' className='edit' onClick={()=>editSim(data.id)} >Edit</button></td>
           <td><button type='button' className='delete' onClick={()=>deleteSim(data.id)}>Delete</button></td>
         </tr>

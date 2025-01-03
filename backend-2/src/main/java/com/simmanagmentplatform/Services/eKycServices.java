@@ -13,6 +13,7 @@ public interface eKycServices {
     public ResponseEntity<ApiResponse> UpdateEkycRecord(EkycDTO ekycDTO, Long id);
     public ResponseEntity<ApiResponse> deleteEkycRecord(Long id);
     public EkycDTO getEkycRecordById(Long id);
+    public EkycDTO getEkycRecordByProfileId(Long id);
     public List<EkycDTO> getEkycRecordByStatus(String status);
     public List<EkycDTO> getAllEkycRecord();
 

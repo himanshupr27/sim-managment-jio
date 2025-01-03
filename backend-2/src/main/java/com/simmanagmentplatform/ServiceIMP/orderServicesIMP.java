@@ -18,6 +18,7 @@ import com.simmanagmentplatform.Exceptions.ResourseNotFoundException;
 import com.simmanagmentplatform.Reposiotry.orderRepo;
 import com.simmanagmentplatform.Reposiotry.profileRepo;
 import com.simmanagmentplatform.Response.ApiResponse;
+import com.simmanagmentplatform.Response.ApiResponseWithData;
 import com.simmanagmentplatform.Services.orderServices;
 
 @Service
@@ -40,10 +41,10 @@ public class orderServicesIMP implements orderServices {
         ordersEntity.setOrderDate(new Date());
         ordersEntity.setOrderStatus("KYC PENDING");
 
-        this.orderRepo.save(ordersEntity);
+        OrdersDTO savOrdersDTO =entityToDto(this.orderRepo.save(ordersEntity));
+        ApiResponseWithData<OrdersDTO> apiResponseWithData =new ApiResponseWithData<>("Order CREATED", true, savOrdersDTO);
 
-        ApiResponse apiResponse =new ApiResponse("Order CREATED", true);
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(apiResponseWithData, HttpStatus.OK);
 
     }
 
@@ -83,6 +84,15 @@ public class orderServicesIMP implements orderServices {
         OrdersEntity ordersEntity = this.orderRepo.findOneByRazorpayId(raz_id).orElseThrow(()-> new ResourseNotFoundException("Order", "id", raz_id));
 
         return this.entityToDto(ordersEntity);
+    }
+
+    @Override
+    public OrdersDTO getOrderByProfileId(Long profile_id){
+        ProfileEntity profileEntity = this.profileRepo.findById(profile_id).orElseThrow(()-> new ResourseNotFoundException("Profile", "id", Long.toString(profile_id)));
+
+        OrdersDTO ordersDTO =this.entityToDto(this.orderRepo.findByProfileEntity(profileEntity).orElseThrow(()-> new ResourseNotFoundException("Profile", "id", Long.toString(profile_id))));
+        
+        return ordersDTO;
     }
 
     @Override

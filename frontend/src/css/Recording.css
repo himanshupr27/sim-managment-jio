@@ -15,6 +15,21 @@
     .display-hidden{
         display: none;
     }
+    .important-note{
+        background-color: rgb(254, 255, 196);
+        width: 70%;
+        border-radius: 10px;
+        margin-top: 1vmax;
+        margin-bottom: 1vmax;
+        padding: 1vmax;
+        h5{
+            font-weight: 600;
+        }
+        p{
+            font-size: 1vmax;
+            margin-bottom: 0;
+        }
+    }
 }
 .video-kyc-box{
     margin-top: 0.5vmax;
@@ -34,6 +49,7 @@
     }
     .vk-right-part{
         padding: 1vmax;
+        width: 55%;
         h6{
             color: rgba(255, 0, 0, 0.667);
             margin: 1vmax 0vmax;
@@ -76,6 +92,20 @@
             background-color: var(--light-blue);
             transition: all 0.3s ease-in-out;
             transform: scale(1.1);
+        }
+        .instructions-video{
+            background-color: rgb(252, 252, 195);
+            padding: 1vmax;
+            color: rgb(81, 81, 81);
+            border-radius: 10px;
+            margin-top: 1.5vmax;
+            h5{
+                font-weight: 700;
+            }
+            p{
+                font-size: 1vmax;
+                margin-bottom: 0;
+            }
         }
     }
 }

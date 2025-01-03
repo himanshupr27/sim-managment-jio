@@ -22,18 +22,14 @@ public class EkycEntity {
     @Column(name="status")
     private String kycstatus;
 
-    @Lob
-    private byte[] panpic;
+    private String panpic;
 
-    @Lob
-    private byte[] profilepic;
+    private String profilepic;
 
     @Column(name = "addresspic")
-    @Lob
-    private byte[] addressproofpic;
+    private String addressproofpic;
     
-    @Lob
-    private byte[] video;
+    private String video;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id")

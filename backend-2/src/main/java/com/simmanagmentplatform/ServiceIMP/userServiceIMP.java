@@ -3,7 +3,6 @@ package com.simmanagmentplatform.ServiceIMP;
 import java.util.*;
 import java.util.stream.Collectors;
 
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,6 +22,7 @@ import com.simmanagmentplatform.Exceptions.ResourseNotFoundException;
 import com.simmanagmentplatform.Reposiotry.roleRepo;
 import com.simmanagmentplatform.Reposiotry.userRepo;
 import com.simmanagmentplatform.Response.ApiResponse;
+import com.simmanagmentplatform.Response.ApiResponseWithData;
 import com.simmanagmentplatform.Services.userServices;
 
 @Service
@@ -44,19 +44,24 @@ public class userServiceIMP implements userServices {
 
 
     // Create a new User 
+  
     @Override
     public ResponseEntity<ApiResponse> createUser(UsersDTO usersDTO) {
-        Optional<UsersEntity> existingUser = this.userRepo.findByEmailId(usersDTO.getEmailId());
+    Optional<UsersEntity> existingUser = this.userRepo.findByEmailId(usersDTO.getEmailId());
 
-        if (existingUser.isPresent()) {
-            ApiResponse apiResponse = new ApiResponse("User  Already Exists", false);
-            return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
-        }
-        this.userRepo.save(dtoToEntity(usersDTO));
-
-        ApiResponse apiResponse = new ApiResponse("User Created", true);
-        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+    if (existingUser.isPresent()) {
+        ApiResponse apiResponse = new ApiResponse("User Already Exists", false);
+        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
+
+    UsersDTO savedUsersDTO = entityToDto(this.userRepo.save(dtoToEntity(usersDTO)));
+
+    ApiResponseWithData<UsersDTO> apiResponseWithData =
+            new ApiResponseWithData<>("User Created", true, savedUsersDTO);
+
+    return new ResponseEntity<>(apiResponseWithData, HttpStatus.CREATED);
+}
+
 
     // Get all users with pagination
     @Override
@@ -94,6 +99,13 @@ public class userServiceIMP implements userServices {
         return entityToDto(userEntity);
     }
 
+    @Override
+    public UsersDTO getUserByEmailId(String emailId)
+    {
+        UsersEntity userEntity = this.userRepo.findByEmailId(emailId)
+        .orElseThrow(() -> new ResourseNotFoundException("User ", "ID", emailId));
+    return entityToDto(userEntity);
+    }
     // Delete a user by ID
     @Override
     public ResponseEntity<ApiResponse> deleteUser(Long id) {
@@ -129,7 +141,11 @@ public class userServiceIMP implements userServices {
     private UsersDTO entityToDto(UsersEntity userEntity) {
         UsersDTO usersDTO = modelMapper.map(userEntity, UsersDTO.class);
 
-        usersDTO.setProfiles(userEntity.getProfiles().stream().map(profile -> modelMapper.map(profile, ProfileDTO.class)).collect(Collectors.toList()));
+        if(userEntity.getProfiles()!=null)
+        {
+            usersDTO.setProfiles(userEntity.getProfiles().stream().map(profile -> modelMapper.map(profile, ProfileDTO.class)).collect(Collectors.toList()));
+        }
+
         usersDTO.setRole_id(userEntity.getRole().getId());
 
         return usersDTO;
@@ -140,6 +156,7 @@ public class userServiceIMP implements userServices {
         UsersEntity usersEntity = modelMapper.map(usersDTO, UsersEntity.class);
       
         Roles role = this.roleRepo.findById(usersDTO.getRole_id()) .orElseThrow(() -> new ResourseNotFoundException("User ", "ID", Long.toString(usersDTO.getRole_id())));
+        
         usersEntity.setRole(role);
 
         return usersEntity;

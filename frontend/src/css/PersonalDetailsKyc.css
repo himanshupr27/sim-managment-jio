@@ -237,7 +237,7 @@
             text-align: center;
             svg{
                 color: var(--dark-blue);
-                font-size: 2.5vmax;
+                font-size: 2vmax;
             }
           }
       }
@@ -285,6 +285,7 @@
   h5 {
     text-align: center;
     background-color: var(--dark-blue);
+    padding: 0.5vmax;
     color: #ffff;
   }
   .sub-heading {
@@ -297,6 +298,10 @@
     padding-left: 1vmax;
     svg {
       color: green;
+      font-size: 1.4vmax;
+    }
+    li{
+      font-size: 1vmax;
     }
   }
   .it-act {

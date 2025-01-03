@@ -12,6 +12,7 @@ public interface orderServices {
     public ResponseEntity<ApiResponse> createOrder(OrdersDTO ordersDTO,Long profile_id);
     public ResponseEntity<ApiResponse> updateOrder(Long id,OrdersDTO ordersDTO);
     public OrdersDTO getOrderById(Long id);
+    public OrdersDTO getOrderByProfileId(Long profile_id);
     public OrdersDTO getOrderBtRazorpayId(String raz_id);
     public List<OrdersDTO> getAllOrders();
     public List<OrdersDTO> getOrdersByStatus(String status);

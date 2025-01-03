@@ -32,7 +32,7 @@ public class UsersDTO {
     @Email(message = "Email must be valid")
     private String emailId;
 
-    private Long role_id;
+    private Long role_id = 2L;
 
     private List<ProfileDTO> profiles;
 

@@ -23,24 +23,24 @@ public class profileController {
     }
     
     @GetMapping("/get/all")
-    public List<ProfileDTO> getMethodName() {
+    public List<ProfileDTO> getAllProfileDTOs() {
         return this.profileServices.getAllProfile();
     }
     
     @PostMapping("/user/{id}/create")
-    public ResponseEntity<?> postMethodName(@RequestBody ProfileDTO profileDTO,@PathVariable Long id) {
+    public ResponseEntity<?> createProfileEntity(@RequestBody ProfileDTO profileDTO,@PathVariable Long id) {
         
         return this.profileServices.createProfile(profileDTO,id);
     }
 
     @PutMapping("update/{id}")
-    public ResponseEntity<?> putMethodName(@PathVariable Long id, @RequestBody ProfileDTO profileDTO) {
+    public ResponseEntity<?> updateProfiles(@PathVariable Long id, @RequestBody ProfileDTO profileDTO) {
 
         return this.profileServices.updateProfile(profileDTO, id);
     }
     
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<?> deleteService(@PathVariable Long id)
+    public ResponseEntity<?> deleteProfiles(@PathVariable Long id)
     {
         return this.profileServices.deleteProfile(id);
     }

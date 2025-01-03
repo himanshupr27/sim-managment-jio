@@ -7,20 +7,21 @@ import { RxCrossCircled } from "react-icons/rx";
 import { TbArrowBadgeRightFilled } from "react-icons/tb";
 import { MdCloudUpload, MdDelete } from "react-icons/md";
 import { FaFile } from "react-icons/fa";
+import axios from 'axios';
 
 const PersonalDetails = () => {
   const navigate = useNavigate();
   const [userKycDetails, setUserKycDetails] = useState({
     pan: "",
-    aadhar: "",
-    pin: "",
-    dob: "",
-    gender: "",
-    docpin: "",
+    aadhar: ""
+  });
+  const [images, setImages] = useState({
     profilepic: { file: null, preview: "" },
     addresspic: { file: null, preview: "" },
     panpic: { file: null, preview: "" }
   });
+  const [profiledetails, setProfiledetails] = useState({});
+  const [user,setUser]=useState({});
   const [errors, setErrors] = useState({});
   const [personalDetailBlock, setPersonalDetailsBlock] = useState(1);
   const [isButtonDisabled, setIsButtonDisabled] = useState(true);
@@ -29,9 +30,17 @@ const PersonalDetails = () => {
   const [OTP, setOTP] = useState();
   const [generateOtp, setGenerateOtp] = useState();
   const [otpverified, setotpVerified] = useState(false);
+  const [ePin, setePin] = useState();
   const [rePin, setRePin] = useState();
   const [verifyPin, setVerifyPin] = useState();
 
+
+
+  useEffect(() => {
+
+    setProfiledetails(JSON.parse(localStorage.getItem('profile')));
+    setUser(JSON.parse(localStorage.getItem('pki-users')));
+  }, []);
   useEffect(() => {
     setIsButtonDisabled(!(userKycDetails.pan && !errors.pan));
   }, [userKycDetails.pan, errors.pan]);
@@ -82,7 +91,7 @@ const PersonalDetails = () => {
     }
   };
   const verifyPIN = () => {
-    if (userKycDetails.pin === rePin) {
+    if (ePin === rePin) {
       setVerifyPin(true);
       sendAadharOtp();
     }
@@ -110,22 +119,56 @@ const PersonalDetails = () => {
     }
 
   }
-  const handleFileInput = (e) => {
-    const { name, files } = e.target; // Access the file input's name and files
-    const file = files[0]; // Get the first uploaded file
+  // const handleFileInput = (e) => {
+  //   const { name, files } = e.target; // Access the file input's name and files
+  //   const file = files[0]; // Get the first uploaded file
 
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        // Update state with both file object and preview URL
-        setUserKycDetails((prev) => ({
-          ...prev,
-          [name]: { file: file, preview: event.target.result },
-        }));
-      };
-      reader.readAsDataURL(file); // Read the file to get its data URL for preview
+  //   if (file) {
+  //     const reader = new FileReader();
+  //     reader.onload = (event) => {
+  //       // Update state with both file object and preview URL
+  //       setUserKycDetails((prev) => ({
+  //         ...prev,
+  //         [name]: { file: file, preview: event.target.result },
+  //       }));
+  //     };
+  //     reader.readAsDataURL(file); // Read the file to get its data URL for preview
+  //   }
+  // };
+  const handleImageInput = (e) => {
+    const { name, files } = e.target;
+    if (files.length > 0) {
+      const file = files[0];
+      setImages((prev) => ({
+        ...prev,
+        [name]: { file, preview: URL.createObjectURL(file) },
+      }));
     }
   };
+
+  const handelsubmit = async (e) => {
+    e.preventDefault();
+    console.log(userKycDetails);
+
+    const response = await axios.post(`http://localhost:2705/api/kyc_record/create/profile/${profiledetails.id}`,userKycDetails);
+    console.log(response);
+
+    const sendImages = new FormData();
+    sendImages.append("profilepic", images.profilepic.file);
+    sendImages.append("panpic", images.panpic.file);  
+    sendImages.append("addresspic",  images.addresspic.file);
+    const response_images = await axios.post(`http://localhost:2705/api/kyc_record/profile/${profiledetails.id}/upload_images`,sendImages, {
+      headers: {
+          "Content-Type": "multipart/form-data",
+      },
+  });
+  console.log(response_images);
+
+    const response_profile = await axios.put(`http://localhost:2705/api/user/profile/update/${profiledetails.id}`,{encryptedPin:ePin});
+    console.log(response_profile);
+
+    navigate('/video-recording-kyc');
+  }
 
   return (
     <div className='personal-dt-box'>
@@ -145,19 +188,23 @@ const PersonalDetails = () => {
               <table>
                 <tr>
                   <td>Name</td>
-                  <td>: <span className='text-bold'>Himanshu Prasad</span></td>
+                  <td>: <span className='text-bold'>{profiledetails.fullName}</span></td>
                 </tr>
                 <tr>
                   <td>Email ID</td>
-                  <td> : <span className='text-bold'>hipr27052002@gmail.com</span></td>
+                  <td> : <span className='text-bold'>{user.emailId}</span></td>
                 </tr>
                 <tr>
                   <td>Phone No. &nbsp;</td>
-                  <td> : <span className='text-bold'>7761057471</span> </td>
+                  <td> : <span className='text-bold'>+{profiledetails.phoneNumber}</span> </td>
                 </tr>
                 <tr>
                   <td>DOB</td>
-                  <td>: <span className='text-bold'>27/05/2002</span></td>
+                  <td>: <span className='text-bold'>{profiledetails.dob}</span></td>
+                </tr>
+                <tr>
+                  <td>Gender</td>
+                  <td>: <span className='text-bold'>{profiledetails.gender}</span></td>
                 </tr>
               </table>
               <table>
@@ -208,28 +255,6 @@ const PersonalDetails = () => {
             </div>
 
             {panIsValid && <>
-              <div className="dob-gender-box">
-                <div className='input-container'>
-                  <div className={`input-box ${errors.industry ? 'errors-bar' : ''}`}>
-                    <select id="gender" name="gender" required="required" value={userKycDetails.gender} onChange={handleInput}>
-                      <option></option>
-                      <option>Male</option>
-                      <option>Female</option>
-                      <option>Others</option>
-                    </select>
-                    <label htmlFor="industry">Select Gender *</label>
-                  </div>
-                  {errors.gender && <span className="error-message"><RxCrossCircled />Select Gender</span>}
-                </div>
-                <div className='input-container'>
-                  <div className={`input-box ${errors.dob ? 'errors-bar' : ''}`}>
-                    <input id="dob" type="date" name="dob" required="required" value={userKycDetails.dob} onChange={handleInput} placeholder='k'
-                    />
-                    <label htmlFor="pan">Date Of Birth *</label>
-                  </div>
-                  {errors.pan && <span className="error-message"><RxCrossCircled />Enter Your Date Of Birth</span>}
-                </div>
-              </div>
 
               <div className="aadhar-box">
                 <div className="aadhar-input-container">
@@ -295,10 +320,10 @@ const PersonalDetails = () => {
                       name="profilepic"
                       type="file"
                       hidden
-                      onChange={handleFileInput}
+                      onChange={handleImageInput}
                     />
-                    {userKycDetails.profilepic.preview ? (
-                      <img src={userKycDetails.profilepic.preview} alt="Profile Pic" className="uploaded-preview" />
+                    {images.profilepic.preview ? (
+                      <img src={images.profilepic.preview} alt="Profile Pic" className="uploaded-preview" />
                     ) : (
                       <div className="file-container-content">
                         <MdCloudUpload />
@@ -306,15 +331,18 @@ const PersonalDetails = () => {
                       </div>
                     )}
                   </div>
-                  {userKycDetails.profilepic.file && <p><FaFile /> {userKycDetails.profilepic.file.name}<MdDelete
+                  {images.profilepic.file ?
+                  <p><FaFile style={{ color: "#0a2885",fontSize:"1vmax" }}/> {images.profilepic.file.name}<MdDelete
                     onClick={() => {
-                      setUserKycDetails((prev) => ({
+                      setImages((prev) => ({
                         ...prev,
                         profilepic: { file: null, preview: "" },
                       }));
                     }}
                     style={{ cursor: "pointer", color: "red" }}
-                  /></p>}
+                  /></p>:
+                  <p><FaFile style={{fontSize:"1.1vmax" }}/> No File Selected</p>
+                  }
                 </label>
 
                 {/* PAN Upload */}
@@ -329,10 +357,10 @@ const PersonalDetails = () => {
                       name="panpic"
                       type="file"
                       hidden
-                      onChange={handleFileInput}
+                      onChange={handleImageInput}
                     />
-                    {userKycDetails.panpic.preview ? (
-                      <img src={userKycDetails.panpic.preview} alt="PAN Pic" className="uploaded-preview" />
+                    {images.panpic.preview ? (
+                      <img src={images.panpic.preview} alt="PAN Pic" className="uploaded-preview" />
                     ) : (
                       <div className="file-container-content">
                         <MdCloudUpload />
@@ -340,15 +368,15 @@ const PersonalDetails = () => {
                       </div>
                     )}
                   </div>
-                  {userKycDetails.panpic.file && <p><FaFile /> {userKycDetails.panpic.file.name}<MdDelete
+                  {images.panpic.file ? <p><FaFile style={{ color: "#0a2885",fontSize:"1vmax" }}/> {images.panpic.file.name}<MdDelete
                     onClick={() => {
-                      setUserKycDetails((prev) => ({
+                      setImages((prev) => ({
                         ...prev,
                         panpic: { file: null, preview: "" },
                       }));
                     }}
                     style={{ cursor: "pointer", color: "red" }}
-                  /></p>}
+                  /></p>:<p><FaFile style={{fontSize:"1.1vmax" }}/> No File Selected</p>}
                 </label>
 
               </div>
@@ -382,10 +410,10 @@ const PersonalDetails = () => {
                       name="addresspic"
                       type="file"
                       hidden
-                      onChange={handleFileInput}
+                      onChange={handleImageInput}
                     />
-                    {userKycDetails.addresspic.preview ? (
-                      <img src={userKycDetails.addresspic.preview} alt="Address Pic" className="uploaded-preview" />
+                    {images.addresspic.preview ? (
+                      <img src={images.addresspic.preview} alt="Address Pic" className="uploaded-preview" />
                     ) : (
                       <div className="file-container-content">
                         <MdCloudUpload />
@@ -393,15 +421,15 @@ const PersonalDetails = () => {
                       </div>
                     )}
                   </div>
-                  {userKycDetails.addresspic.file && <p><FaFile /> {userKycDetails.addresspic.file.name}<MdDelete
+                  {images.addresspic.file ?<p><FaFile style={{ color: "#0a2885",fontSize:"1vmax" }} /> {images.addresspic.file.name}<MdDelete
                     onClick={() => {
-                      setUserKycDetails((prev) => ({
+                      setImages((prev) => ({
                         ...prev,
                         addresspic: { file: null, preview: "" },
                       }));
                     }}
                     style={{ cursor: "pointer", color: "red" }}
-                  /></p>}
+                  /></p>:<p><FaFile style={{fontSize:"1.1vmax" }}/> No File Selected</p>}
                 </div>
               </div>
 
@@ -418,7 +446,10 @@ const PersonalDetails = () => {
             <div className="signature-pin-container">
               <div className='input-container'>
                 <div className={`input-box ${errors.otp ? 'errors-bar' : ''}`}>
-                  <input id="pin" type="password" name="pin" required="required" value={userKycDetails.pin} maxLength={6} onChange={handleInput} onInput={(e) => {
+                  <input id="pin" type="password" name="pin" required="required" value={ePin} maxLength={6} onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    setePin(value.slice(0, 6));
+                  }} onInput={(e) => {
                     e.target.value = e.target.value.slice(0, 6);
                   }} />
                   <label htmlFor="pin">PIN *</label>
@@ -459,9 +490,7 @@ const PersonalDetails = () => {
           </div>
           <div className="btn-box">
             <button className='back-btn' onClick={() => { setPersonalDetailsBlock(3) }}>Back</button>
-            <button className='next-btn' disabled={!otpverified} onClick={() => { navigate('/video-recording-kyc');
-              console.log(userKycDetails);
-             }}>Submit</button>
+            <button className='next-btn' disabled={!otpverified} onClick={handelsubmit}>Submit</button>
           </div>
         </div>
       </div>
@@ -469,17 +498,17 @@ const PersonalDetails = () => {
         <h5>NOTE</h5>
         <p className='sub-heading'>Instructions For Pan</p>
         <ul>
-          <li><TiTick /></li>
-          <li><TiTick /></li>
-          <li><TiTick /></li>
-          <li><TiTick /></li>
+          <li><TiTick />Upload the file in PDF, JPEG, or PNG format.</li>
+          <li><TiTick />The file size should not exceed 2MB.</li>
+          <li><TiTick />Verify that the PAN details match your application information.</li>
+          <li><TiTick />Ensure that the PAN card is clear and legible</li>
         </ul>
         <p className='sub-heading'>Instructions For Documents</p>
         <ul>
-          <li><TiTick /></li>
-          <li><TiTick /></li>
-          <li><TiTick /></li>
-          <li><TiTick /></li>
+          <li><TiTick />Upload scanned copies of valid identification (e.g., Aadhaar, Passport, Voter ID).</li>
+          <li><TiTick />The file size should be under 2MB.</li>
+          <li><TiTick />Acceptable formats: PDF, JPEG, PNG. (If multiple pages combine into a single PDF if necessary.)</li>
+          <li><TiTick />Ensure the document is not blurred or tampered with</li>
         </ul>
 
         <p className='it-act'>Section 71 of IT Act stipulates that if anyone makes a misrepresentation or suppresses any material fact from the CCA or CA for obtaining any DSC such person shall be punishable with imprisonment up to 2 years or with fine up to one lakh rupees or with both.</p>

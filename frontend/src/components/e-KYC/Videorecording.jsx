@@ -2,7 +2,9 @@ import React, { useRef, useState, useCallback, useEffect } from "react";
 import Webcam from "react-webcam";
 import RecordRTC from "recordrtc";
 import {useNavigate } from 'react-router-dom';
+import { TbArrowBadgeRightFilled } from "react-icons/tb";
 import "../../css/Recording.css";
+import axios from "axios";
 
 const Videorecording = () => {
   const navigate = useNavigate();
@@ -12,13 +14,14 @@ const Videorecording = () => {
   const [recordedChunks, setRecordedChunks] = useState([]); 
   const [previewSrc, setPreviewSrc] = useState(null); 
   const [videoBlob, setVideoBlob] = useState(null); 
-  const [userData, setUserData] = useState(JSON.parse(localStorage.getItem("pki-users")));
+  const[profile,setProfile]= useState({});
   const [code, setCode] = useState();
 
   function generateRandomFourDigitNumber() {
     setCode(Math.floor(1000 + Math.random() * 9000));
   }
   useEffect(() => {
+    setProfile(JSON.parse(localStorage.getItem('profile')));
     generateRandomFourDigitNumber();
   }, []);
 
@@ -64,19 +67,24 @@ const Videorecording = () => {
     generateRandomFourDigitNumber();
   }, []);
 
-  const handleSubmit = useCallback(() => {
+  const handleSubmit = useCallback(async() => {
     if (!videoBlob) {
       alert("Please record a video before submitting!");
       return;
     }
     const formData = new FormData();
-    formData.append("video", new File([videoBlob], `${userData.usersname}-video-ekyc-${code}.webm`, { type: "video/webm" }));
-    formData.append("username", userData.usersname);
-    formData.append("code", code);
+    formData.append("video", new File([videoBlob], `${profile.fullName}-video-ekyc-${code}.webm`, { type: "video/webm" }));
     console.log(formData);
+    const response = await axios.put(`http://localhost:2705/api/kyc_record/profile/${profile.id}/upload_video`,formData, {
+      headers: {
+          "Content-Type": "multipart/form-data",
+      },
+  });
+  console.log(response);
+  
     navigate('/track-order');
 
-  }, [videoBlob, userData, code]);
+  }, [videoBlob, profile, code]);
 
   return (
     <>
@@ -104,7 +112,7 @@ const Videorecording = () => {
 
         <div className="steps">
           <span>Read</span>
-          <p>I am {userData.usersname}, and my code for this video KYC is {code}</p>
+          <p>I am {profile.fullName}, and my code for this video KYC is {code}</p>
         </div>
         <div className="steps">
           <span>Show</span>
@@ -135,6 +143,12 @@ const Videorecording = () => {
               </button>
             </>
           )}
+        </div>
+        <div className="instructions-video">
+          <h5>Instructions</h5>
+          <p><TbArrowBadgeRightFilled/>Click one Start Recording when your are ready with all the document</p>
+          <p><TbArrowBadgeRightFilled/>Once ypu have recorded click on stop recording and you can privew yor video</p>
+          <p><TbArrowBadgeRightFilled/>if the recorded video if clear in audio and video then you can proceed with the submit</p>
         </div>
       </div>
     </>

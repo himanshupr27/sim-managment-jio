@@ -20,6 +20,7 @@ import PaymentSucess from './components/orders/PymentSucess.jsx';
 import Recording from './components/e-KYC/Recording.jsx';
 import PersonalDetails from './components/e-KYC/PersonalDetails.jsx';
 import TrackOrder from './components/orders/TrackOrder.jsx';
+import LoginNew from './components/user/LoginNew.jsx';
 
 const App = () => {
   const router = createBrowserRouter([
@@ -29,7 +30,8 @@ const App = () => {
     },
     {
       path: "/bussiness/user/login",
-      element: <><Navbar/><Login/><Footer/></>,
+      // element: <><Navbar/><Login/><Footer/></>,
+      element: <><Navbar/><LoginNew/><Footer/></>,
     },
     {
       path: "/loader",
@@ -60,6 +62,10 @@ const App = () => {
           element: <><AdminDashboard/></>,
         },
       ],
+    },
+    {
+      path: '/admin',  
+      element: <><AdminDashboard/></>,
     },
     {
       path: "/video-recording-kyc",

@@ -1,5 +1,6 @@
 package com.simmanagmentplatform.Services;
 
+
 import org.springframework.http.ResponseEntity;
 
 
@@ -19,6 +20,8 @@ public interface userServices {
     public GetAllResponse<UsersDTO> getAllUsers( Integer PageNumber,Integer PageSize);
 
     public UsersDTO getUserById(Long id);
+
+    public UsersDTO getUserByEmailId(String emailId);
     
     public ResponseEntity<?> deleteUser(Long id);
     

@@ -1,6 +1,8 @@
 package com.simmanagmentplatform.ServiceIMP;
 
+
 import java.util.List;
+
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -23,6 +25,7 @@ import com.simmanagmentplatform.Reposiotry.profileRepo;
 import com.simmanagmentplatform.Reposiotry.simRepo;
 import com.simmanagmentplatform.Reposiotry.userRepo;
 import com.simmanagmentplatform.Response.ApiResponse;
+import com.simmanagmentplatform.Response.ApiResponseWithData;
 import com.simmanagmentplatform.Services.profileServices;
 
 @Service
@@ -51,10 +54,13 @@ public class profileServicesIMP implements profileServices {
 
         profileDTO.setUser_id(id);
         ProfileEntity profileEntity = this.dtoToEntity(profileDTO);
-        this.profileRepo.save(profileEntity);
+        profileEntity = this.profileRepo.save(profileEntity);
+        ProfileDTO profileDTO2=this.entityToDto(profileEntity);
 
-        ApiResponse apiResponse =new ApiResponse("Profile CREATED", true);
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        ApiResponseWithData<ProfileDTO> apiResponseWithData =
+            new ApiResponseWithData<>("Profile CREATED", true, profileDTO2);
+
+        return new ResponseEntity<>(apiResponseWithData, HttpStatus.OK);
     }
 
     @Override

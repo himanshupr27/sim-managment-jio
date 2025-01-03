@@ -1,12 +1,15 @@
 package com.simmanagmentplatform.ServiceIMP;
 
+// import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
 import org.springframework.stereotype.Service;
 
 import com.simmanagmentplatform.Dto.EkycDTO;
@@ -18,6 +21,7 @@ import com.simmanagmentplatform.Reposiotry.profileRepo;
 import com.simmanagmentplatform.Response.ApiResponse;
 import com.simmanagmentplatform.Services.eKycServices;
 
+
 @Service
 public class ekycServicesIMP implements eKycServices {
 
@@ -26,6 +30,11 @@ public class ekycServicesIMP implements eKycServices {
 
     @Autowired
     private profileRepo profileRepo;
+
+     @Autowired
+    private ModelMapper modelMapper;
+
+
 
     @Override
     public ResponseEntity<ApiResponse> createEkycRecord(EkycDTO ekycDTO,Long profile_id) {
@@ -43,10 +52,11 @@ public class ekycServicesIMP implements eKycServices {
 
         Optional.ofNullable(ekycDTO.getPan()).ifPresent(entity::setPan);
         Optional.ofNullable(ekycDTO.getAadhar()).ifPresent(entity::setAadhar);
-        Optional.ofNullable(ekycDTO.getPanpic()).ifPresent(pic -> entity.setPanpic(pic.getBytes()));
-        Optional.ofNullable(ekycDTO.getProfilepic()).ifPresent(pic -> entity.setProfilepic(pic.getBytes()));
-        Optional.ofNullable(ekycDTO.getAddressproofpic()).ifPresent(pic -> entity.setAddressproofpic(pic.getBytes()));
+        Optional.ofNullable(ekycDTO.getProfilepic()).ifPresent(entity::setProfilepic);
+        Optional.ofNullable(ekycDTO.getPanpic()).ifPresent(entity::setPanpic);
+        Optional.ofNullable(ekycDTO.getAddressproofpic()).ifPresent(entity::setAddressproofpic);
         Optional.ofNullable(ekycDTO.getKycstatus()).ifPresent(entity::setKycstatus);
+        Optional.ofNullable(ekycDTO.getVideo()).ifPresent(entity::setVideo);
         Optional.ofNullable(ekycDTO.getProfile_id()).ifPresent(profile_id->{
             ProfileEntity profileEntity =this.profileRepo.findById(profile_id).orElseThrow(()-> new ResourseNotFoundException("PROFILE", "id", Long.toString(profile_id)));
             entity.setProfileEntity(profileEntity);
@@ -75,6 +85,12 @@ public class ekycServicesIMP implements eKycServices {
 
         return convertToDto(entity);
     }
+    @Override
+    public EkycDTO getEkycRecordByProfileId(Long id){
+        ProfileEntity profileEntity =this.profileRepo.findById(id).orElseThrow(()-> new ResourseNotFoundException("PROFILE", "id", Long.toString(id)));
+        EkycEntity ekycEntity = this.ekycRepo.findByProfileEntity(profileEntity);
+        return this.convertToDto(ekycEntity);
+    }
 
     @Override
     public List<EkycDTO> getEkycRecordByStatus(String status) {
@@ -95,34 +111,21 @@ public class ekycServicesIMP implements eKycServices {
         return entities.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+
+
     //..............................................................................................
 
-    private EkycDTO convertToDto(EkycEntity entity) {
-        Long profileEntityId = entity.getProfileEntity() != null ? entity.getProfileEntity().getId() : null;
-        
-        return new EkycDTO(
-            entity.getId(),
-            entity.getPan(),
-            entity.getAadhar(),
-            new String(entity.getProfilepic()),
-            new String(entity.getPanpic()),
-            new String(entity.getAddressproofpic()),
-            new String(entity.getVideo()),
-            entity.getKycstatus(),
-            profileEntityId
-        );
-    }
+private EkycDTO convertToDto(EkycEntity entity) {
+    EkycDTO ekycDTO =this.modelMapper.map(entity,EkycDTO.class);
+    Long profileEntityId = entity.getProfileEntity() != null ? entity.getProfileEntity().getId() : null;
+    ekycDTO.setProfile_id(profileEntityId);
+
+    return ekycDTO;
+}
 
     private EkycEntity convertToEntity(EkycDTO dto) {
-        EkycEntity entity = new EkycEntity();
-        entity.setId(dto.getId());
-        entity.setPan(dto.getPan());
-        entity.setAadhar(dto.getAadhar());
-        entity.setProfilepic(dto.getProfilepic().getBytes());
-        entity.setPanpic(dto.getPanpic().getBytes());
-        entity.setAddressproofpic(dto.getAddressproofpic().getBytes());
-        entity.setVideo(dto.getVideo().getBytes());
-        entity.setKycstatus(dto.getKycstatus());
+        EkycEntity entity = this.modelMapper.map(dto,EkycEntity.class);
+
         if(dto.getProfile_id()!=null)
         {
             ProfileEntity profileEntity =this.profileRepo.findById(dto.getProfile_id()).orElseThrow(()-> new ResourseNotFoundException("PROFILE", "id", Long.toString(dto.getProfile_id())));
@@ -130,4 +133,7 @@ public class ekycServicesIMP implements eKycServices {
         }
         return entity;
     }
+
+
+
 }

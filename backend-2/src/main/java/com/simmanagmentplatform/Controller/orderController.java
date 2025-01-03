@@ -38,7 +38,7 @@ public class orderController {
     @PostMapping("/create_order")
     public String createOrder(@RequestBody Map<String, Object> data) throws Exception {
         int amount = (int) data.get("amount");
-        // System.out.println("Amount: " + amount);
+        System.out.println(data);
         // System.out.println("payment initiated");
         var client = new RazorpayClient("rzp_test_VtabkGRGa9SEhd", "675RezP9uZy5Acc8BP2TPNeE");
         JSONObject ob = new JSONObject();
@@ -47,6 +47,7 @@ public class orderController {
         ob.put("receipt","txn_235425");
         Order order = client.orders.create(ob);
         System.out.println(order);
+        System.out.println(order.toString());
         return order.toString();
     }
 
