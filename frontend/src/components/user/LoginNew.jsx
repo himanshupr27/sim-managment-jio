@@ -68,13 +68,18 @@ const LoginNew = () => {
 
     const handelSendOtp=async()=>{
        const response= await axios.get(`http://localhost:2705/api/user/emailId?emailId=${user.emailId}`);
-        console.log(response);
+        // console.log(response);
         if(response.status==200)
         {
-            localStorage.setItem('user',JSON.stringify(response.data));
-            setResponsData(response.data);
             setOtpbox(true);
-            generateOtpCode();
+            const otpresponse= await axios.get(`http://localhost:2705/email/send?email=${user.emailId}`
+                , { withCredentials: true }
+            );
+            // console.log(otpresponse);
+            if(otpresponse.status==200){
+                localStorage.setItem('user',JSON.stringify(response.data));
+                setResponsData(response.data);
+            }
         }
 
     }
@@ -111,17 +116,12 @@ const LoginNew = () => {
     //         setisloginerror(true);
     //     }
     // }
-
-    const generateOtpCode=()=>{
-        const otp = Math.floor(100000 + Math.random() * 900000);
-        setUser({
-            ...user,
-            otp: otp,
-        });
-        alert(`Your Otp is ${otp}`);
-    }
-    const handelVerifOtp=()=>{
-        if (Number(OTP) === user.otp){
+    const handelVerifOtp=async()=>{
+        const otpresponse= await axios.get(`http://localhost:2705/email/verify?otp=${OTP}`
+            , { withCredentials: true }
+        );
+        console.log(otpresponse);
+        if (otpresponse.status==200){
             alert("sucessfull")
             if(responsedata.role_id == 1){
                 navigate('/admin')
@@ -157,7 +157,7 @@ const LoginNew = () => {
                             secure
                         />
                         {otpError && <p className="error-message">Wrong OTP entered!</p>}
-                        <p className='resend-otp' onClick={generateOtpCode}>Resent OTP</p>
+                        <p className='resend-otp' onClick={handelSendOtp}>Resent OTP</p>
                     </div>}
                     
 

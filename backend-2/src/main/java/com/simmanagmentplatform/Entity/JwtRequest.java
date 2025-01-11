@@ -17,6 +17,5 @@ import lombok.Setter;
 public class JwtRequest {
     @Email
     private String email;
-    // @NotNull
-    // private String password;
+    private int otp;
 }

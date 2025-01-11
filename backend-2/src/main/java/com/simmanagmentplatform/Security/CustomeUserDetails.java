@@ -33,6 +33,6 @@
 //         //     .collect(Collectors.toSet());
 
 //         // return new User(user.getId(), user.getPassword(), authorities);
-//         return user;
+//         return (UserDetails) user;
 //     }
 // }

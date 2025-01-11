@@ -93,6 +93,7 @@ public class eKycController {
     public ResponseEntity<ApiResponse> putMethodName(@PathVariable Long id, @RequestParam MultipartFile video) throws IOException {
         EkycDTO ekycDTO = this.eKycServices.getEkycRecordByProfileId(id);
         ekycDTO.setVideo(this.fileServices.uploadResourse(video));
+        ekycDTO.setKycstatus("APROVAL PENDING");
         return this.updateRecord(ekycDTO.getId(), ekycDTO);
     }
     // @GetMapping("/get_files")

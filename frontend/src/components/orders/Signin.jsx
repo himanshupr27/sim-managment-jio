@@ -39,6 +39,7 @@ const Signin = () => {
         const newOtp = Math.floor(100000 + Math.random() * 900000);
         setGenerateOtp(newOtp);
         alert(`The OTP for login is ${newOtp}`);
+        
     };
 
     const handleSubmit = (e) => {

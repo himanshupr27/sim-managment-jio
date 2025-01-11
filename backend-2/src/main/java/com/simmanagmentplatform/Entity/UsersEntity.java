@@ -1,9 +1,6 @@
 package com.simmanagmentplatform.Entity;
 
 import java.util.List;
-
-// import jakarta.persistence.Column;
-
 // import java.util.Collection;
 // import java.util.HashSet;
 // import java.util.Set;
@@ -26,7 +23,7 @@ import jakarta.persistence.*;
 @Setter
 @Entity
 @Table(name = "users")
-public class UsersEntity  {
+public class UsersEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,12 +39,6 @@ public class UsersEntity  {
 
     @OneToMany(mappedBy = "usersEntity",cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ProfileEntity> profiles;
-
-
-
-
-
-
 
 
     // @Override
@@ -81,4 +72,5 @@ public class UsersEntity  {
     // public boolean isEnabled() {
     //     return true;
     // }
+
 }

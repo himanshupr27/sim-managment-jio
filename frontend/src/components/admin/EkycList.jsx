@@ -93,7 +93,10 @@ const EkycList = ({ contentType }) => {
             const response = await axios.put(`http://localhost:2705/api/kyc_record/update/${id}`, {
                 kycstatus: status,
             });
+            console.log(profileData.id);
+            const emailresponse = await axios.post(`http://localhost:2705/email/kYC_verifyied/${profileData.id}`);
             console.log('Response:', response.data);
+            console.log('Email response:', emailresponse.data);
         } catch (error) {
             console.error('Error updating KYC status:', error);
         }

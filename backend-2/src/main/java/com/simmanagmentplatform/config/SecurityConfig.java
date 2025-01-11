@@ -4,6 +4,8 @@
 // import org.springframework.context.annotation.Bean;
 // import org.springframework.context.annotation.Configuration;
 // import org.springframework.security.authentication.AuthenticationManager;
+// import org.springframework.security.authentication.AuthenticationProvider;
+// import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 // // import org.springframework.security.authentication.AuthenticationProvider;
 // // import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 // import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,7 +20,7 @@
 // import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 // import org.springframework.web.cors.CorsConfigurationSource;
 
-// // import com.simmanagmentplatform.Security.CustomeUserDetails;
+// import com.simmanagmentplatform.Security.CustomeUserDetails;
 // import com.simmanagmentplatform.Security.JwtAunthenticationFilter;
 // import com.simmanagmentplatform.Security.JwtAuthenticationEntryPoint;
 
@@ -30,7 +32,7 @@
 //     @Autowired
 //     private JwtAuthenticationEntryPoint authenticationEntryPoint;
 //     @Autowired
-//     // private CustomeUserDetails customeUserDetails;
+//     private CustomeUserDetails customeUserDetails;
 
 //     @Bean
 //     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -40,6 +42,7 @@
 //                 .authorizeHttpRequests(request -> request
 //                 .requestMatchers("/api/auth/login").permitAll()
 //                 .requestMatchers("/api/user/**").permitAll()
+//                 .requestMatchers("/email/**").permitAll()
 //                 // .requestMatchers("/api/user/getallDetails").hasRole("ADMIN")
 //                 .requestMatchers("/api/sims/**").permitAll()
 //                 .requestMatchers("/api/order/**").permitAll()
@@ -50,18 +53,18 @@
 //                         .authenticationEntryPoint(authenticationEntryPoint))
 //                 .sessionManagement(session -> session
 //                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class);
-//                 // .authenticationProvider(authenticationProvider());
+//                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
+//                 .authenticationProvider(authenticationProvider());
 //         return http.build();
 //     }
 
-//     // @Bean
-//     // public AuthenticationProvider authenticationProvider() {
-//     //     DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-//     //     authProvider.setUserDetailsService(customeUserDetails);
-//     //     authProvider.setPasswordEncoder(passwordEncoder());
-//     //     return authProvider;
-//     // }
+//     @Bean
+//     public AuthenticationProvider authenticationProvider() {
+//         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+//         authProvider.setUserDetailsService(customeUserDetails);
+//         authProvider.setPasswordEncoder(passwordEncoder());
+//         return authProvider;
+//     }
 
 //  @Bean
 //     public CorsConfigurationSource corsConfigurationSource() {
@@ -81,9 +84,14 @@
 //         return new BCryptPasswordEncoder();
 //     }
 
+//     // @Bean
+//     // AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+//     //         throws Exception {
+//     //     return authenticationConfiguration.getAuthenticationManager();
+//     // }
 //     @Bean
-//     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-//             throws Exception {
-//         return authenticationConfiguration.getAuthenticationManager();
-//     }
+// AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+//         throws Exception {
+//     return authenticationConfiguration.getAuthenticationManager();
+// }
 // }
